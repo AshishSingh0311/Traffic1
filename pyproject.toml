@@ -1,1 +1,11 @@
+[project]
+name = "traffic1"
+version = "0.1.0"
+dependencies = [
+    "streamlit",
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "scikit-learn"
+]
 
