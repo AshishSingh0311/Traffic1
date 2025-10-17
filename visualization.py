@@ -43,18 +43,40 @@ class TrafficVisualizer:
             return image
         
         if CV2_AVAILABLE:
-            # Normalize density map
-            normalized_density = cv2.normalize(density_map, None, 0, 255, cv2.NORM_MINMAX)
-            
-            # Create heatmap
+            # Ensure image is HxWx3 uint8
+            img = image
+            if img.ndim == 2:
+                img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+            if img.ndim == 3 and img.shape[2] == 4:
+                # Drop alpha channel
+                img = img[..., :3]
+            img = img.astype(np.uint8)
+
+            # Normalize density map to 0-255
+            try:
+                normalized_density = cv2.normalize(density_map, None, 0, 255, cv2.NORM_MINMAX)
+            except Exception:
+                # Fallback normalization
+                dmin, dmax = float(density_map.min()), float(density_map.max())
+                if dmax - dmin == 0:
+                    normalized_density = (density_map * 0).astype(np.uint8)
+                else:
+                    normalized_density = ((density_map - dmin) * 255.0 / (dmax - dmin)).astype(np.uint8)
+
+            # Create heatmap (BGR)
             heatmap = cv2.applyColorMap(normalized_density.astype(np.uint8), cv2.COLORMAP_JET)
-            
+
             # Resize heatmap to match image size if needed
-            if heatmap.shape[:2] != image.shape[:2]:
-                heatmap = cv2.resize(heatmap, (image.shape[1], image.shape[0]))
-            
+            if heatmap.shape[:2] != img.shape[:2]:
+                heatmap = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
+
+            # Ensure heatmap is uint8 and 3-channel
+            if heatmap.ndim == 2:
+                heatmap = cv2.cvtColor(heatmap, cv2.COLOR_GRAY2BGR)
+            heatmap = heatmap.astype(np.uint8)
+
             # Overlay heatmap on original image
-            overlay = cv2.addWeighted(image, 0.6, heatmap, 0.4, 0)
+            overlay = cv2.addWeighted(img, 0.6, heatmap, 0.4, 0)
         else:
             # Simple heatmap without OpenCV
             normalized_density = ((density_map - density_map.min()) * 255 / 

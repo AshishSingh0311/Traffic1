@@ -42,9 +42,21 @@ Preferred communication style: Simple, everyday language.
 
 ### Machine Learning Libraries
 - **scikit-learn**: Random Forest regression and data preprocessing utilities
-- **TensorFlow/Keras**: LSTM neural network implementation for time series prediction
-- **XGBoost**: Gradient boosting for traffic pattern analysis
-- **NumPy/Pandas**: Data manipulation and numerical computations
+- **TensorFlow/Keras**: LSTM neural network implementation for time series prediction  
+  *Install with:*  
+  ```
+  pip install tensorflow
+  ```
+- **XGBoost**: Gradient boosting for traffic pattern analysis  
+  *Install with:*  
+  ```
+  pip install xgboost
+  ```
+- **NumPy/Pandas**: Data manipulation and numerical computations  
+  *Install with:*  
+  ```
+  pip install numpy pandas
+  ```
 
 ### Computer Vision Stack
 - **OpenCV**: Image processing, vehicle detection, and video stream handling

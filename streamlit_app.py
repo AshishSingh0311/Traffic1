@@ -642,7 +642,7 @@ if st.session_state.dataset is not None:
                         fig_radar_perf = go.Figure()
                         
                         # Normalize complexity (invert for radar chart - higher is better)
-                        complexity_normalized = 6 - evaluation_df['System Complexity'].str.split('/').str[0].astype(int)
+                        complexity_normalized = 6 - evaluation_df['Complexity Score'].str.split('/').str[0].astype(int)
                         
                         for idx, row in evaluation_df.iterrows():
                             values = [
@@ -861,8 +861,8 @@ if st.session_state.dataset is not None:
                 st.info("✅ Vehicle Detection\n✅ Traffic Density\n✅ Speed Prediction\n✅ Congestion Analysis")
 
             if uploaded_file is not None:
-                # Load and display image
-                image = Image.open(uploaded_file)
+                # Load and display image (force RGB to avoid alpha channel issues)
+                image = Image.open(uploaded_file).convert('RGB')
 
                 # Image processing section
                 st.markdown("---")
@@ -972,13 +972,23 @@ if st.session_state.dataset is not None:
 
                             # Detailed breakdown
                             st.markdown("##### 🚙 Detailed Breakdown")
-                            for vehicle_type, count in vehicle_counts.items():
-                                percentage = (count / total_vehicles) * 100
-                                st.metric(
-                                    vehicle_type.title(),
-                                    count,
-                                    delta=f"{percentage:.1f}%"
-                                )
+                            if total_vehicles == 0:
+                                st.info("No vehicles were detected in the image.")
+                                # Show each type with 0 count and 0% delta
+                                for vehicle_type, count in vehicle_counts.items():
+                                    st.metric(
+                                        vehicle_type.title(),
+                                        0,
+                                        delta="0.0%"
+                                    )
+                            else:
+                                for vehicle_type, count in vehicle_counts.items():
+                                    percentage = (count / total_vehicles) * 100
+                                    st.metric(
+                                        vehicle_type.title(),
+                                        count,
+                                        delta=f"{percentage:.1f}%"
+                                        )
 
                 with tab3:
                     st.markdown("#### 🔮 Advanced Traffic Predictions")

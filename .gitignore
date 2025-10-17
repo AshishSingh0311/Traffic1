@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# Streamlit cache and config
+.streamlit/
+
+# Data and models
+attached_assets/
+*.csv
+*.pt
+*.pth
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Compiled files
+build/
+dist/
+
+# Secrets
+.env
+
+# Optional: ignore model results if large
+model_results.json
